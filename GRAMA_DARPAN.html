@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grama Darpan - Transparent Public Services</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff69b4, #9370db);
+      animation: bgmove 8s ease infinite;
+      background-size: 400% 400%;
+      color: #333;
+    }
+
+    @keyframes bgmove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    header, footer {
+      background-color: #2b0033;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    section {
+      display: none;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      margin: 30px auto;
+      padding: 30px;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .card {
+      background: #f5f5f5;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2, h3 {
+      color: #4b0073;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    .btn {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #d44a97;
+    }
+
+    .admin-section {
+      border: 2px dashed #9370db;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Grama Darpan</h1>
+  <p>Empowering Communities with Transparency</p>
+</header>
+
+<section id="register">
+  <h2>Register</h2>
+  <input id="reg-name" placeholder="Your Name" />
+  <input id="reg-email" placeholder="Email" type="email"/>
+  <input id="reg-password" placeholder="Password" type="password"/>
+  <button class="btn" onclick="registerUser()">Register</button>
+  <button class="btn" onclick="gotoSection('login', 'register')">Go to Login</button>
+</section>
+
+<section id="login">
+  <h2>Login</h2>
+  <input id="login-email" placeholder="Email" type="email"/>
+  <input id="login-password" placeholder="Password" type="password"/>
+  <button class="btn" onclick="loginUser()">Login</button>
+  <button class="btn" onclick="gotoSection('register', 'login')">← Back</button>
+</section>
+
+<section id="dashboard">
+  <h2>Welcome to Your Dashboard</h2>
+  <p id="welcome-user" class="card"></p>
+
+  <div id="user-dashboard">
+    <div class="card">
+      <h3>Status Overview</h3>
+      <p>Personal Details: <span id="details-status">Not Submitted</span></p>
+      <p>Blockchain Logs: <span id="block-status">No Logs</span></p>
+      <p>IoT Status: <span id="iot-status">No Activity</span></p>
+    </div>
+
+    <div class="card">
+      <button class="btn" onclick="gotoSection('details', 'dashboard')">Update Personal Details</button>
+      <button class="btn" onclick="gotoSection('blockchain', 'dashboard')">View Blockchain Logs</button>
+      <button class="btn" onclick="gotoSection('iot', 'dashboard')">Check IoT Status</button>
+      <button class="btn" onclick="gotoSection('tollfree', 'dashboard')">Toll-Free Help</button>
+    </div>
+  </div>
+
+  <div id="admin-dashboard" class="admin-section hidden">
+    <h3>Admin Panel</h3>
+    <div class="card">
+      <p><b>Registered Users:</b></p>
+      <ul id="user-list"></ul>
+      <button class="btn" onclick="clearAll()">⚠ Clear All Data</button>
+    </div>
+  </div>
+
+  <button class="btn" onclick="logout()">Logout</button>
+</section>
+
+<section id="details">
+  <h2>Personal Details</h2>
+  <input id="aadhaar" placeholder="Aadhaar Number" />
+  <input id="pan" placeholder="PAN Number" />
+  <input id="bank" placeholder="Bank Account Number" />
+  <button class="btn" onclick="submitDetails()">Submit Details</button>
+  <button class="btn" onclick="gotoSection('dashboard', 'details')">← Back</button>
+</section>
+
+<section id="blockchain">
+  <h2>Blockchain Log</h2>
+  <button class="btn" onclick="logInteraction('Healthcare')">Log Healthcare</button>
+  <button class="btn" onclick="logInteraction('Ration')">Log Ration</button>
+  <p id="log-output"></p>
+  <button class="btn" onclick="gotoSection('dashboard', 'blockchain')">← Back</button>
+</section>
+
+<section id="iot">
+  <h2>IoT Supply Chain Status</h2>
+  <button class="btn" onclick="simulateIoT()">Simulate IoT Updates</button>
+  <p id="iot-output"></p>
+  <button class="btn" onclick="gotoSection('dashboard', 'iot')">← Back</button>
+</section>
+
+<section id="tollfree">
+  <h2>Toll-Free Help</h2>
+  <p>Call: <b>1500-2233-8520</b></p>
+  <button class="btn" onclick="gotoSection('dashboard', 'tollfree')">← Back</button>
+</section>
+
+<footer>
+  <p>© Grama Darpan | Empowering Communities</p>
+  <p>Toll-Free: 1500-2233-8520</p>
+</footer>
+
+<script>
+  function gotoSection(show, hide) {
+    document.getElementById(hide).style.display = 'none';
+    document.getElementById(show).style.display = 'block';
+    if (show === 'dashboard') updateDashboard();
+  }
+
+  function registerUser() {
+    const name = document.getElementById('reg-name').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    if (name && email && password) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      users.push({ name, email, password });
+      localStorage.setItem('users', JSON.stringify(users));
+      alert("Registered! Please login.");
+      gotoSection('login', 'register');
+    } else {
+      alert("All fields are required.");
+    }
+  }
+
+  function loginUser() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      document.getElementById('welcome-user').innerText = `Hello, ${user.name}!`;
+      gotoSection('dashboard', 'login');
+    } else {
+      alert("Invalid credentials.");
+    }
+  }
+
+  function updateDashboard() {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const isAdmin = user.email === 'admin@grama.com';
+    document.getElementById('admin-dashboard').classList.toggle('hidden', !isAdmin);
+    document.getElementById('user-dashboard').classList.toggle('hidden', isAdmin);
+    document.getElementById('welcome-user').innerText = `Hello, ${user.name}!`;
+
+    // update status
+    document.getElementById('details-status').innerText = localStorage.getItem('details') ? 'Submitted' : 'Not Submitted';
+    document.getElementById('block-status').innerText = localStorage.getItem('log') ? 'Activity Logged' : 'No Logs';
+    document.getElementById('iot-status').innerText = localStorage.getItem('iotStatus') || 'No Activity';
+
+    if (isAdmin) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const ul = document.getElementById('user-list');
+      ul.innerHTML = '';
+      users.forEach(u => {
+        const li = document.createElement('li');
+        li.innerText = `${u.name} (${u.email})`;
+        ul.appendChild(li);
+      });
+    }
+  }
+
+  function submitDetails() {
+    const aadhaar = document.getElementById('aadhaar').value;
+    const pan = document.getElementById('pan').value;
+    const bank = document.getElementById('bank').value;
+    if (aadhaar && pan && bank) {
+      localStorage.setItem('details', JSON.stringify({ aadhaar, pan, bank }));
+      alert("Details saved.");
+      gotoSection('dashboard', 'details');
+    } else {
+      alert("All details required.");
+    }
+  }
+
+  function logInteraction(type) {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const time = new Date().toLocaleString();
+    const log = `${type} logged by ${user.name} at ${time}`;
+    localStorage.setItem('log', log);
+    document.getElementById('log-output').innerText = log;
+  }
+
+  function simulateIoT() {
+    const output = document.getElementById('iot-output');
+    const updates = ['Tracking started', 'Goods dispatched', 'Delivered'];
+    let i = 0;
+    const interval = setInterval(() => {
+      output.innerText = updates[i];
+      localStorage.setItem('iotStatus', updates[i]);
+      i++;
+      if (i === updates.length) clearInterval(interval);
+    }, 2000);
+  }
+
+  function logout() {
+    localStorage.removeItem('currentUser');
+    gotoSection('login', 'dashboard');
+  }
+
+  function clearAll() {
+    if (confirm("Are you sure to clear all data?")) {
+      localStorage.clear();
+      alert("Data cleared. Reloading...");
+      location.reload();
+    }
+  }
+
+  // Init
+  document.getElementById('login').style.display = 'block';
+</script>
+
+</body>
+</html>
